@@ -5,7 +5,7 @@ description: Read GitLab data through REST API to fetch merge request details, m
 
 # gitlab-api
 
-Use `scripts/gitlab_api.py` to call GitLab REST API with credentials from `.env`.
+Use method-specific scripts in `scripts/` to call GitLab REST API with credentials from `.env`.
 
 ## Configure
 
@@ -27,20 +27,11 @@ Supported aliases:
 Use one command per API method.
 
 ```bash
-python scripts/gitlab_api.py mr --project 123 --iid 45
-python scripts/gitlab_api.py changes --project group%2Fproject --iid 45
-python scripts/gitlab_api.py notes --project 123 --iid 45
-python scripts/gitlab_api.py note-create --project 123 --iid 45 --body "string"
-python scripts/gitlab_api.py file --project 123 --file-path path/to/file.py --ref main
+python scripts/mr.py --project 123 --iid 45
+python scripts/changes.py --project group%2Fproject --iid 45
+python scripts/notes.py --project 123 --iid 45
+python scripts/file.py --project 123 --file-path path/to/file.py --ref main
 ```
-
-## Method Mapping
-
-- `mr` -> `GET /projects/:id/merge_requests/:merge_request_iid`
-- `changes` -> `GET /projects/:id/merge_requests/:merge_request_iid/changes`
-- `notes` -> `GET /projects/:id/merge_requests/:merge_request_iid/notes`
-- `note-create` -> `POST /projects/:id/merge_requests/:merge_request_iid/notes` (requires `body`)
-- `file` -> `GET /projects/:id/repository/files/:file_path` (requires `ref`)
 
 ## Implementation Notes
 
