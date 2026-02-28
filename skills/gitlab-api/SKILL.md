@@ -1,6 +1,6 @@
 ---
 name: gitlab-api
-description: Read GitLab data through REST API using a local Python script with .env credentials. Use when you need to fetch merge request details, merge request changes, merge request notes, or repository file metadata/content from GitLab by project ID/path and merge request IID.
+description: Read GitLab data through REST API to fetch merge request details, merge request changes, merge request notes, or repository file metadata/content by project ID/path and merge request IID.
 ---
 
 # gitlab-api
@@ -9,7 +9,7 @@ Use `scripts/gitlab_api.py` to call GitLab REST API with credentials from `.env`
 
 ## Configure
 
-Create `.env` next to the script, or pass values from environment variables.
+Create `.env` in the current working directory (where you run the command), or pass values from environment variables.
 
 Expected keys:
 

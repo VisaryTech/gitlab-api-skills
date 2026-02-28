@@ -75,8 +75,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ref", default="main", help="Ref for repository file endpoint (default: main).")
     parser.add_argument(
         "--env-file",
-        default=str(Path(__file__).resolve().parent.parent / ".env"),
-        help="Path to .env file (default: skill root .env).",
+        default=str(Path.cwd() / ".env"),
+        help="Path to .env file (default: ./.env in current working directory).",
     )
     return parser.parse_args()
 
