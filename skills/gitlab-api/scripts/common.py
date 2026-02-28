@@ -4,7 +4,7 @@ import os
 import sys
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote, unquote
+from urllib.parse import quote, unquote, urlencode
 from urllib.request import Request, urlopen
 
 
@@ -63,6 +63,20 @@ def call_gitlab(base_url: str, token: str, path: str) -> object:
     return json.loads(payload)
 
 
+def call_gitlab_post(base_url: str, token: str, path: str, data: dict[str, str]) -> object:
+    url = f"{base_url}{path}"
+    payload = urlencode(data).encode("utf-8")
+    headers = {
+        "PRIVATE-TOKEN": token,
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+    request = Request(url, method="POST", headers=headers, data=payload)
+    with urlopen(request, timeout=30) as response:
+        body = response.read().decode("utf-8")
+    return json.loads(body)
+
+
 def print_result(result: object) -> None:
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
@@ -80,4 +94,3 @@ def handle_error(exc: Exception) -> int:
         return 2
     print(f"Execution error: {exc}", file=sys.stderr)
     return 1
-

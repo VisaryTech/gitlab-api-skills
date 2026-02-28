@@ -30,6 +30,7 @@ Use one command per API method.
 python scripts/mr.py --project 123 --iid 45
 python scripts/changes.py --project group%2Fproject --iid 45
 python scripts/notes.py --project 123 --iid 45
+python scripts/create_note.py --project 123 --iid 45 --body "string"
 python scripts/file.py --project 123 --file-path path/to/file.py --ref main
 ```
 
@@ -39,3 +40,4 @@ python scripts/file.py --project 123 --file-path path/to/file.py --ref main
 - Send `PRIVATE-TOKEN` header for authentication.
 - URL-encode project and file path safely.
 - Fail with clear HTTP error text and status code.
+- `create_note.py` posts form field `body` to `POST /projects/:id/merge_requests/:merge_request_iid/notes`.
