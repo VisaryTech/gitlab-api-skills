@@ -30,6 +30,7 @@ Use one command per API method.
 python scripts/gitlab_api.py mr --project 123 --iid 45
 python scripts/gitlab_api.py changes --project group%2Fproject --iid 45
 python scripts/gitlab_api.py notes --project 123 --iid 45
+python scripts/gitlab_api.py note-create --project 123 --iid 45 --body "string"
 python scripts/gitlab_api.py file --project 123 --file-path path/to/file.py --ref main
 ```
 
@@ -38,6 +39,7 @@ python scripts/gitlab_api.py file --project 123 --file-path path/to/file.py --re
 - `mr` -> `GET /projects/:id/merge_requests/:merge_request_iid`
 - `changes` -> `GET /projects/:id/merge_requests/:merge_request_iid/changes`
 - `notes` -> `GET /projects/:id/merge_requests/:merge_request_iid/notes`
+- `note-create` -> `POST /projects/:id/merge_requests/:merge_request_iid/notes` (requires `body`)
 - `file` -> `GET /projects/:id/repository/files/:file_path` (requires `ref`)
 
 ## Implementation Notes

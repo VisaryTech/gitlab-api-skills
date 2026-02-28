@@ -51,6 +51,8 @@ def build_path(project: str, command: str, iid: str, file_path: str, ref: str) -
         return f"/api/v4/projects/{project_encoded}/merge_requests/{iid}/changes"
     if command == "notes":
         return f"/api/v4/projects/{project_encoded}/merge_requests/{iid}/notes"
+    if command == "note-create":
+        return f"/api/v4/projects/{project_encoded}/merge_requests/{iid}/notes"
     if command == "file":
         file_encoded = quote(file_path, safe="")
         query = urlencode({"ref": ref})
@@ -58,9 +60,14 @@ def build_path(project: str, command: str, iid: str, file_path: str, ref: str) -
     raise ValueError(f"Unsupported command: {command}")
 
 
-def call_gitlab(base_url: str, token: str, path: str) -> object:
+def call_gitlab(base_url: str, token: str, path: str, method: str = "GET", body: str = "") -> object:
     url = f"{base_url}{path}"
-    request = Request(url, headers={"PRIVATE-TOKEN": token, "Accept": "application/json"})
+    headers = {"PRIVATE-TOKEN": token, "Accept": "application/json"}
+    payload = None
+    if method == "POST":
+        headers["Content-Type"] = "application/x-www-form-urlencoded"
+        payload = urlencode({"body": body}).encode("utf-8")
+    request = Request(url, data=payload, method=method, headers=headers)
     with urlopen(request, timeout=30) as response:
         payload = response.read().decode("utf-8")
     return json.loads(payload)
@@ -68,9 +75,10 @@ def call_gitlab(base_url: str, token: str, path: str) -> object:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Call selected GitLab REST API endpoints.")
-    parser.add_argument("command", choices=["mr", "changes", "notes", "file"])
+    parser.add_argument("command", choices=["mr", "changes", "notes", "note-create", "file"])
     parser.add_argument("--project", required=True, help="Project ID or path (for path use group/project).")
-    parser.add_argument("--iid", help="Merge request IID (required for mr/changes/notes).")
+    parser.add_argument("--iid", help="Merge request IID (required for mr/changes/notes/note-create).")
+    parser.add_argument("--body", help="Note body text (required for note-create).")
     parser.add_argument("--file-path", help="Repository file path (required for file).")
     parser.add_argument("--ref", default="main", help="Ref for repository file endpoint (default: main).")
     parser.add_argument(
@@ -82,8 +90,10 @@ def parse_args() -> argparse.Namespace:
 
 
 def validate_args(args: argparse.Namespace) -> None:
-    if args.command in {"mr", "changes", "notes"} and not args.iid:
-        raise ValueError("--iid is required for mr/changes/notes")
+    if args.command in {"mr", "changes", "notes", "note-create"} and not args.iid:
+        raise ValueError("--iid is required for mr/changes/notes/note-create")
+    if args.command == "note-create" and not args.body:
+        raise ValueError("--body is required for note-create")
     if args.command == "file" and not args.file_path:
         raise ValueError("--file-path is required for file")
 
@@ -110,7 +120,14 @@ def main() -> int:
             ref=args.ref,
         )
 
-        result = call_gitlab(normalize_base_url(base_url), token, path)
+        method = "POST" if args.command == "note-create" else "GET"
+        result = call_gitlab(
+            normalize_base_url(base_url),
+            token,
+            path,
+            method=method,
+            body=args.body or "",
+        )
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
     except HTTPError as e:
