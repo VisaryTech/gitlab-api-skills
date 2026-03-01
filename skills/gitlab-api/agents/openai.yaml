@@ -1,4 +1,4 @@
 interface:
   display_name: "GitLab API"
-  short_description: "Read and post GitLab merge request and file data via REST API."
-  default_prompt: "Use this skill to fetch merge request details, changes, notes, create merge request notes, and read repository files from GitLab REST API."
+  short_description: "Read and post GitLab merge requests, pipelines/jobs, and file data via REST API."
+  default_prompt: "Use this skill to fetch merge request details, changes, notes, create merge request notes, fetch pipeline details/jobs, and read repository files from GitLab REST API."
