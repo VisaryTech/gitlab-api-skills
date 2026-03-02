@@ -1,6 +1,6 @@
 ---
 name: gitlab-api
-description: Read GitLab data through REST API to fetch merge request details/changes/notes, create notes, fetch pipeline details/jobs, or read repository file metadata/content.
+description: Read GitLab data through REST API to fetch merge request details/changes/notes, create notes, list pipeline runs, fetch pipeline details/jobs, or read repository file metadata/content.
 ---
 
 # gitlab-api
@@ -31,6 +31,7 @@ python scripts/mr.py --project 123 --iid 45
 python scripts/changes.py --project group%2Fproject --iid 45
 python scripts/notes.py --project 123 --iid 45
 python scripts/create_note.py --project 123 --iid 45 --body "string"
+python scripts/pipelines.py --project 123 --ref 7.3.0 --per-page 1
 python scripts/pipeline.py --project 123 --pipeline-id 98765
 python scripts/pipeline_jobs.py --project 123 --pipeline-id 98765
 python scripts/pipeline_jobs.py --project 123 --pipeline-id 98765 --scope pending --scope running
@@ -44,6 +45,7 @@ python scripts/file.py --project 123 --file-path path/to/file.py --ref main
 - URL-encode project and file path safely.
 - Fail with clear HTTP error text and status code.
 - `create_note.py` posts form field `body` to `POST /projects/:id/merge_requests/:merge_request_iid/notes`.
+- `pipelines.py` calls `GET /projects/:id/pipelines?ref=<ref>&per_page=<n>`.
 - `pipeline.py` calls `GET /projects/:id/pipelines/:pipeline_id`.
 - `pipeline_jobs.py` calls `GET /projects/:id/pipelines/:pipeline_id/jobs`.
 - `pipeline_jobs.py` supports repeating `--scope` and sends it as `scope[]` (for example: `pending`, `running`, `failed`, `success`).
