@@ -15,12 +15,12 @@ Expected keys:
 
 ```env
 gitlab_server=
-access_token=
+gitlab_access_token=
 ```
 
 Supported aliases:
 - `gitlab_server` or `GITLAB_SERVER`
-- `access_token` or `ACCESS_TOKEN` or `GITLAB_TOKEN`
+- `gitlab_access_token` or `ACCESS_TOKEN` or `GITLAB_TOKEN`
 
 ## Run
 
